@@ -4,7 +4,7 @@ const cors = require("cors");
 const { IncomingForm } = require("formidable");
 const nodemailer = require("nodemailer");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cors({ origin: "*", credentials: true }));
