@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*", credentials: true }));
 
 app.post("/api/appoint", (req, res) => {
   const form = new IncomingForm();
@@ -18,7 +18,7 @@ app.post("/api/appoint", (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Form parsing failed" });
-    }
+    }  
 
     // Prepare email content
     const output = `
@@ -39,7 +39,7 @@ app.post("/api/appoint", (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
-console.log(fields)
+    // console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS)
     // Send mail
     try {
       await transporter.sendMail({
@@ -55,10 +55,16 @@ console.log(fields)
       });
     } catch (error) {
       console.error("Email send error:", error);
-      res.status(500).json({ success: false, message: "Failed to send email or Email is not correct" });
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: "Failed to send email or Email is not correct",
+        });
     }
   });
 });
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
