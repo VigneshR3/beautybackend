@@ -18,7 +18,7 @@ app.post("/api/appoint", (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Form parsing failed" });
-    }  
+    }
 
     // Prepare email content
     const output = `
@@ -34,6 +34,8 @@ app.post("/api/appoint", (req, res) => {
     // Setup email transport
     let transporter = nodemailer.createTransport({
       service: "gmail",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -55,16 +57,14 @@ app.post("/api/appoint", (req, res) => {
       });
     } catch (error) {
       console.error("Email send error:", error);
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Failed to send email or Email is not correct",
-        });
+      res.status(500).json({
+        success: false,
+        message: "Failed to send email or Email is not correct",
+      });
     }
   });
 });
-    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
+console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
